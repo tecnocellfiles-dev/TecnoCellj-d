@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TecnoCell — Tecnología & Celulares · San José, CR</title>
-  <meta name="description" content="Celulares, accesorios y tecnología premium. Tu tienda tech en Desamparados, San José, Costa Rica.">
+  <title>TecnoCell — Tecnología & Celulares · San Pedro, San José CR</title>
+  <meta name="description" content="Celulares, accesorios y tecnología premium. Tu tienda tech en Plaza San Pedro, San José, Costa Rica.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -209,6 +209,18 @@
     .wa-cta-eye{font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
     .wa-cta-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.45rem;color:var(--white);}
 
+
+    /* INFO STRIP */
+    .info-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:40px 5%;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:60px;}
+    .info-block{padding:28px 30px;border-right:1px solid var(--border);}
+    .info-block:last-child{border-right:none;}
+    .info-icon{font-size:1.5rem;margin-bottom:10px;display:block;}
+    .info-label{font-family:"Space Mono",monospace;font-size:.55rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);margin-bottom:6px;}
+    .info-val{font-family:"Syne",sans-serif;font-weight:600;font-size:1rem;color:var(--white);line-height:1.5;}
+    .info-val a{color:var(--gold);text-decoration:none;transition:opacity .2s;}
+    .info-val a:hover{opacity:.7;}
+    .info-sub{display:block;font-size:.75rem;color:var(--muted);font-weight:400;font-family:"Space Grotesk",sans-serif;margin-top:3px;}
+
     /* FOOTER */
     footer{border-top:1px solid var(--border);padding:36px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
     .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:2px;color:var(--muted);}
@@ -228,7 +240,7 @@
     #back-top:hover{color:var(--gold);border-color:rgba(212,168,67,.4);}
 
     /* RESPONSIVE */
-    @media(max-width:900px){.cats-grid{grid-template-columns:repeat(2,1fr);}.modal-inner{grid-template-columns:1fr;}.modal-left{border-right:none;border-bottom:1px solid var(--border);}.wa-cta{flex-direction:column;text-align:center;}.hero-stats{flex-wrap:wrap;}}
+    @media(max-width:900px){.cats-grid{grid-template-columns:repeat(2,1fr);}.modal-inner{grid-template-columns:1fr;}.modal-left{border-right:none;border-bottom:1px solid var(--border);}.wa-cta{flex-direction:column;text-align:center;}.hero-stats{flex-wrap:wrap;}.info-strip{grid-template-columns:1fr;}.info-block{border-right:none;border-bottom:1px solid var(--border);}.info-block:last-child{border-bottom:none;}}
     @media(max-width:600px){.products-grid{grid-template-columns:repeat(2,1fr);}.hero-title{font-size:clamp(3.2rem,13vw,5.5rem);}.hero-title{letter-spacing:-2px;}}
   </style>
 </head>
@@ -246,17 +258,18 @@
 
   <section class="hero">
     <div class="hero-inner">
-      <div class="hero-eye">San José · Desamparados, CR &nbsp;·&nbsp; Tecnología de Vanguardia</div>
+      <div class="hero-eye">📍 Plaza San Pedro &nbsp;·&nbsp; San Pedro, San José &nbsp;·&nbsp; 8711 2377</div>
       <h1 class="hero-title">TECNO<span class="acc">CELL</span></h1>
       <p class="hero-sub">Celulares, accesorios y gadgets de última generación. Atención directa y garantía en cada producto.</p>
       <div class="hero-actions">
         <a href="#catalogo" class="btn-primary">Ver catálogo →</a>
-        <a href="https://wa.me/50687443315?text=¡Hola!%20Quiero%20información%20de%20TecnoCell." target="_blank" class="btn-ghost">WhatsApp</a>
+        <a href="https://wa.me/50687112377?text=¡Hola!%20Quiero%20información%20de%20TecnoCell." target="_blank" class="btn-ghost">WhatsApp</a>
       </div>
-      <div class="hero-stats">
+      <div class="hero-stats" id="hero-stats">
+        <div class="h-stat"><span class="h-stat-val" id="stat-productos">—</span><span class="h-stat-lbl">Productos</span></div>
         <div class="h-stat"><span class="h-stat-val">100%</span><span class="h-stat-lbl">Garantía</span></div>
-        <div class="h-stat"><span class="h-stat-val">24/7</span><span class="h-stat-lbl">Soporte</span></div>
         <div class="h-stat"><span class="h-stat-val">0%</span><span class="h-stat-lbl">Interés</span></div>
+        <div class="h-stat"><span class="h-stat-val">24/7</span><span class="h-stat-lbl">Soporte WA</span></div>
       </div>
     </div>
   </section>
@@ -270,10 +283,10 @@
     <p class="sec-label">Explora por categoría</p>
     <h2 class="sec-head">¿Qué estás <em>buscando?</em></h2>
     <div class="cats-grid">
-      <div class="cat-block" onclick="filterBy('celulares')"><span class="cat-num">01</span><span class="cat-icon">📱</span><div class="cat-name">Celulares</div><div class="cat-sub">iOS · Android · Flagship</div></div>
-      <div class="cat-block" onclick="filterBy('accesorios')"><span class="cat-num">02</span><span class="cat-icon">🎧</span><div class="cat-name">Accesorios</div><div class="cat-sub">Audio · Cases · Cables</div></div>
-      <div class="cat-block" onclick="filterBy('tech')"><span class="cat-num">03</span><span class="cat-icon">💻</span><div class="cat-name">Tech</div><div class="cat-sub">Laptops · Tablets · Monitores</div></div>
-      <div class="cat-block" onclick="window.open('https://wa.me/50687443315','_blank')"><span class="cat-num">04</span><span class="cat-icon">💬</span><div class="cat-name">Consultas</div><div class="cat-sub">WhatsApp directo</div></div>
+      <div class="cat-block" onclick="filterBy('celulares')"><span class="cat-num" id="cat-count-celulares">—</span><span class="cat-icon">📱</span><div class="cat-name">Celulares</div><div class="cat-sub">iOS · Android · Flagship</div></div>
+      <div class="cat-block" onclick="filterBy('accesorios')"><span class="cat-num" id="cat-count-accesorios">—</span><span class="cat-icon">🎧</span><div class="cat-name">Accesorios</div><div class="cat-sub">Audio · Cases · Cables</div></div>
+      <div class="cat-block" onclick="filterBy('tech')"><span class="cat-num" id="cat-count-tech">—</span><span class="cat-icon">💻</span><div class="cat-name">Tech</div><div class="cat-sub">Laptops · Tablets · Monitores</div></div>
+      <div class="cat-block" onclick="window.open('https://wa.me/50687112377','_blank')"><span class="cat-num" style="color:#39d98a">WA</span><span class="cat-icon">💬</span><div class="cat-name">Consultas</div><div class="cat-sub">WhatsApp · 8711 2377</div></div>
     </div>
   </section>
 
@@ -299,12 +312,40 @@
     <div class="products-grid" id="product-grid" style="margin-top:2px;"></div>
   </section>
 
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-block">
+      <span class="info-icon">📍</span>
+      <div class="info-label">Ubicación</div>
+      <div class="info-val">
+        <a href="https://www.google.com/search?q=Plaza+San+Pedro&ludocid=992585850592785062" target="_blank" rel="noopener">Plaza San Pedro</a>
+        <span class="info-sub">San Pedro, San José, Costa Rica</span>
+      </div>
+    </div>
+    <div class="info-block">
+      <span class="info-icon">📞</span>
+      <div class="info-label">Teléfono / WhatsApp</div>
+      <div class="info-val">
+        <a href="tel:+50687112377">8711 2377</a>
+        <a href="https://wa.me/50687112377" target="_blank" rel="noopener" class="info-sub" style="color:var(--gold)">Escribinos al WhatsApp →</a>
+      </div>
+    </div>
+    <div class="info-block">
+      <span class="info-icon">🛡️</span>
+      <div class="info-label">Garantía & Financiamiento</div>
+      <div class="info-val">
+        Garantía en todos los productos
+        <span class="info-sub">Financiamiento 0% interés disponible</span>
+      </div>
+    </div>
+  </div>
+
   <div class="wa-cta">
     <div>
       <div class="wa-cta-eye">Atención personalizada</div>
       <div class="wa-cta-title">¿Tenés dudas? Te asesoramos al instante</div>
     </div>
-    <a href="https://wa.me/50687443315?text=¡Hola!%20Quiero%20info%20de%20TecnoCell." target="_blank" class="btn-primary">
+    <a href="https://wa.me/50687112377?text=¡Hola!%20Quiero%20info%20de%20TecnoCell." target="_blank" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
       Chatear ahora
     </a>
@@ -312,8 +353,13 @@
 
   <footer>
     <div class="footer-logo">TECNO<em>CELL</em></div>
-    <div class="footer-copy">© 2025 TecnoCell · Desamparados, San José, Costa Rica</div>
-    <a href="admin.html" style="font-size:.56rem;letter-spacing:2px;color:var(--muted2);text-decoration:none;font-family:'Space Mono',monospace;opacity:.3;transition:opacity .2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.3'">ADMIN</a>
+    <div class="footer-copy">© 2026 TecnoCell · Plaza San Pedro, San José, CR</div>
+    <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+      <a href="https://www.google.com/search?q=Plaza+San+Pedro&ludocid=992585850592785062" target="_blank" rel="noopener" style="font-size:.65rem;color:var(--muted2);text-decoration:none;font-family:Space Mono,monospace;letter-spacing:2px;transition:color .2s;" onmouseover="this.style.color=&quot;var(--gold)&quot;" onmouseout="this.style.color=&quot;var(--muted2)&quot;">📍 San Pedro</a>
+      <a href="tel:+50687112377" style="font-size:.65rem;color:var(--muted2);text-decoration:none;font-family:Space Mono,monospace;letter-spacing:2px;">📞 8711 2377</a>
+      <a href="https://wa.me/50687112377" target="_blank" rel="noopener" style="font-size:.65rem;color:var(--muted2);text-decoration:none;font-family:Space Mono,monospace;letter-spacing:2px;">💬 WhatsApp</a>
+      <a href="admin.html" style="font-size:.56rem;letter-spacing:2px;color:var(--muted2);text-decoration:none;font-family:Space Mono,monospace;opacity:.3;transition:opacity .2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.3'">ADMIN</a>
+    </div>
   </footer>
 
   <div id="product-modal"></div>
@@ -348,6 +394,8 @@
 // ═══════════════════════════════════════════════════════════
 //  TECNOCELL · main script · self-contained
 // ═══════════════════════════════════════════════════════════
+
+const WA_NUMBER = "50687112377";
 
 // ── DEFAULT INVENTORY ────────────────────────────────────────
 const DEFAULT_INVENTORY = [
@@ -524,8 +572,8 @@ function sendWhatsApp() {
   if (!cart.length) return;
   const total = cart.reduce((s,i) => s+i.price*(i.qty||1), 0);
   const lines = cart.map(i => `• ${i.name}${i.qty>1?' ×'+i.qty:''} — ₡${(i.price*(i.qty||1)).toLocaleString()}`).join('\n');
-  const msg = `¡Hola! Quiero hacer un pedido 🛍️\n\n${lines}\n\n*TOTAL: ₡${total.toLocaleString()}*`;
-  window.open('https://web.whatsapp.com/send?phone=50687443315&text='+encodeURIComponent(msg), '_blank');
+  const msg = `¡Hola TecnoCell! 👋 Quiero hacer un pedido:\n\n${lines}\n\n*TOTAL: ₡${total.toLocaleString()}*`;
+  window.open('https://wa.me/50687112377&text='+encodeURIComponent(msg), '_blank');
 }
 
 // ── MODAL ─────────────────────────────────────────────────────
@@ -620,7 +668,16 @@ document.addEventListener('keydown', e => {
 });
 
 // ── INIT ──────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => { renderGrid(); refreshCartUI(); });
+document.addEventListener('DOMContentLoaded', () => { renderGrid(); refreshCartUI(); updateDynamicCounts(); });
+
+function updateDynamicCounts() {
+  const inv = getInventory();
+  const sp = document.getElementById('stat-productos'); if(sp) sp.textContent = inv.length;
+  ['celulares','accesorios','tech'].forEach(type => {
+    const c = document.getElementById('cat-count-'+type);
+    if(c) c.textContent = inv.filter(i => i.type === type).length;
+  });
+}
 </script>
 </body>
 </html>
