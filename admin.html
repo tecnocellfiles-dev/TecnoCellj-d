@@ -307,14 +307,14 @@
       <div class="sec-hdr"><div class="sec-ttl">Exportar / Importar Inventario</div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;">
         <div>
-          <div style="font-weight:600;margin-bottom:6px;">📤 Exportar inventario</div>
-          <p style="font-size:.8rem;color:var(--text2);margin-bottom:12px;">Descarga el <strong>index.html</strong> actualizado con todos los productos integrados para reemplazarlo en GitHub.</p>
+          <div style="font-weight:600;margin-bottom:6px;">📤 Exportar products.json</div>
+          <p style="font-size:.8rem;color:var(--text2);margin-bottom:12px;">Descarga el archivo <strong>products.json</strong> con todos los productos. Súbelo junto a tu index.html en Cloudflare Pages.</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-            <button class="btn btn-primary btn-sm" onclick="generateExport()">Generar código</button>
-            <button class="btn btn-ghost btn-sm" onclick="downloadIndexJs()">⬇ Descargar index.html</button>
+            <button class="btn btn-primary btn-sm" onclick="generateExport()">Generar JSON</button>
+            <button class="btn btn-ghost btn-sm" onclick="downloadProductsJson()">⬇ Descargar products.json</button>
             <button class="btn btn-ghost btn-sm" onclick="copyExport()">📋 Copiar</button>
           </div>
-          <textarea class="code-area" id="export-area" placeholder="Click en 'Generar código'…" readonly></textarea>
+          <textarea class="code-area" id="export-area" placeholder="Click en 'Generar JSON'…" readonly></textarea>
         </div>
         <div>
           <div style="font-weight:600;margin-bottom:6px;">📥 Importar inventario</div>
@@ -327,15 +327,15 @@
         </div>
       </div>
       <div style="margin-top:26px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;">
-        <div style="font-weight:600;margin-bottom:10px;">📋 Cómo publicar cambios en GitHub Pages</div>
+        <div style="font-weight:600;margin-bottom:10px;">📋 Cómo publicar cambios en Cloudflare Pages</div>
         <ol style="color:var(--text2);font-size:.82rem;line-height:2.2;padding-left:18px;">
-          <li>Aquí edita los productos como quieras.</li>
-          <li>Click en <strong style="color:var(--gold);">Generar código</strong> → luego <strong style="color:var(--gold);">Descargar index.html</strong>.</li>
-          <li>Ve a tu repositorio en GitHub y sube ese archivo reemplazando el anterior.</li>
-          <li>¡En 1-2 minutos tu tienda estará actualizada!</li>
+          <li>Edita los productos aquí en el panel.</li>
+          <li>Click en <strong style="color:var(--gold);">Generar JSON</strong> → luego <strong style="color:var(--gold);">Descargar products.json</strong>.</li>
+          <li>Sube <code>products.json</code> a tu proyecto en Cloudflare Pages (junto a index.html).</li>
+          <li>¡Tu tienda se actualiza al instante! No necesitas tocar index.html.</li>
         </ol>
         <div style="margin-top:12px;padding:12px;background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.2);border-radius:6px;font-size:.78rem;color:var(--gold);">
-          💡 <strong>Tip:</strong> Los cambios se guardan en tu navegador automáticamente. Para que sean permanentes en la web, descarga el index.html y súbelo a GitHub.
+          💡 <strong>Tip:</strong> Los cambios se guardan en tu navegador automáticamente. Para publicarlos, solo descarga y sube products.json.
         </div>
       </div>
     </div>
@@ -431,13 +431,21 @@
 //  AUTH
 //  Cambia estos valores para modificar las credenciales:
 // ═══════════════════════════════════════════════════════════
-const ADMIN = { user: 'admin', pass: 'mall2025' };
+const ADMIN_USER = 'admin';
+const ADMIN_HASH = '7e63b7dc634cbd7e53bda83b4f402b886b1ba64968d4d68d508985791c4b5f77'; // SHA-256 de "mall2025"
 const SESSION_KEY = 'tc-admin-session';
 
-function doLogin() {
+async function sha256(text) {
+  const buf = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin() {
   const u = (document.getElementById('l-user').value || '').trim();
   const p = document.getElementById('l-pass').value || '';
-  if (u === ADMIN.user && p === ADMIN.pass) {
+  const hash = await sha256(p);
+  if (u === ADMIN_USER && hash === ADMIN_HASH) {
     localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }));
     showApp();
   } else {
@@ -784,19 +792,8 @@ function closeConfirm() { document.getElementById('confirm-wrap').classList.remo
 // ═══════════════════════════════════════════════════════════
 function generateExport() {
   const json = JSON.stringify(adminInventory, null, 2);
-  // Fetch the index.html and inject the new inventory
-  fetch('index.html')
-    .then(r => r.text())
-    .then(src => {
-      const updated = src.replace(/const DEFAULT_INVENTORY = \[[\s\S]*?\];/, `const DEFAULT_INVENTORY = ${json};`);
-      document.getElementById('export-area').value = updated;
-      toast('Código generado ✓ — listo para descargar','ok');
-    })
-    .catch(() => {
-      // Fallback: output just the inventory block
-      document.getElementById('export-area').value = `const DEFAULT_INVENTORY = ${json};`;
-      toast('Código generado ✓ (solo inventario)','ok');
-    });
+  document.getElementById('export-area').value = json;
+  toast('products.json generado ✓ — listo para descargar','ok');
 }
 
 function copyExport() {
@@ -805,19 +802,10 @@ function copyExport() {
   navigator.clipboard.writeText(area.value).then(() => toast('Copiado ✓','ok')).catch(() => { area.select(); document.execCommand('copy'); toast('Copiado ✓','ok'); });
 }
 
-function downloadIndexJs() {
-  // Generate first, then download
+function downloadProductsJson() {
   const json = JSON.stringify(adminInventory, null, 2);
-  fetch('index.html')
-    .then(r => r.text())
-    .then(src => {
-      const updated = src.replace(/const DEFAULT_INVENTORY = \[[\s\S]*?\];/, `const DEFAULT_INVENTORY = ${json};`);
-      downloadBlob(updated, 'index.html', 'text/html');
-      toast('index.html descargado ✓ — Súbelo a GitHub','ok');
-    })
-    .catch(() => {
-      toast('No se pudo leer index.html — genera el código y cópialo manualmente','err');
-    });
+  downloadBlob(json, 'products.json', 'application/json');
+  toast('products.json descargado ✓ — Súbelo a Cloudflare','ok');
 }
 
 function downloadBlob(content, filename, mime) {

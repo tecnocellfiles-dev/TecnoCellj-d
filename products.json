@@ -1,0 +1,165 @@
+[
+  {
+    "id": 1,
+    "name": "iPhone 15 Pro Max Titanium",
+    "price": 980000,
+    "stock": 6,
+    "type": "celulares",
+    "img": "https://images.unsplash.com/photo-1695048064029-b98bdf717f4b?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1695048064029-b98bdf717f4b?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Forjado en titanio aeroespacial. Cámara de 48MP y chip A17 Pro.",
+    "specs": {
+      "Material": "Titanio Grado 5",
+      "Chip": "A17 Pro",
+      "Cámara": "48MP Pro",
+      "Almacenamiento": "256GB"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Samsung Galaxy S24 Ultra",
+    "price": 890000,
+    "stock": 7,
+    "type": "celulares",
+    "img": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Pantalla Dynamic AMOLED 2X, 200MP y S Pen integrado.",
+    "specs": {
+      "Pantalla": "6.8\" AMOLED 2X",
+      "Cámara": "200MP",
+      "S Pen": "Incluido",
+      "RAM": "12GB"
+    }
+  },
+  {
+    "id": 3,
+    "name": "MacBook Pro M3",
+    "price": 1850000,
+    "stock": 5,
+    "type": "tech",
+    "img": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Chip M3 Pro, 18GB RAM unificada y pantalla Liquid Retina XDR.",
+    "specs": {
+      "Chip": "Apple M3 Pro",
+      "RAM": "18GB",
+      "Pantalla": "Liquid Retina XDR",
+      "Batería": "22 horas"
+    }
+  },
+  {
+    "id": 4,
+    "name": "iPad Pro M4 12.9\"",
+    "price": 1200000,
+    "stock": 4,
+    "type": "tech",
+    "img": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Chip M4 y pantalla Ultra Retina XDR Tandem OLED.",
+    "specs": {
+      "Chip": "Apple M4",
+      "Pantalla": "12.9\" Tandem OLED",
+      "Conectividad": "Wi-Fi 6E + 5G"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Monitor OLED 4K Ultrawide",
+    "price": 750000,
+    "stock": 3,
+    "type": "tech",
+    "img": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Negros infinitos y 175Hz para la experiencia visual definitiva.",
+    "specs": {
+      "Panel": "OLED 4K",
+      "Refresco": "175Hz",
+      "HDR": "HDR1000"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Apple Watch Series 10",
+    "price": 550000,
+    "stock": 5,
+    "type": "accesorios",
+    "img": "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Monitoreo de salud 24/7, GPS preciso y pantalla Always-On.",
+    "specs": {
+      "Display": "OLED Always-On",
+      "GPS": "L1 + L5",
+      "Batería": "18 horas"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Case MagSafe iPhone 15 Pro",
+    "price": 35000,
+    "stock": 20,
+    "type": "accesorios",
+    "img": "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Protección premium con soporte MagSafe. Carga inalámbrica perfecta.",
+    "specs": {
+      "Compat.": "iPhone 15 Pro/Max",
+      "Material": "Silicona premium",
+      "MagSafe": "Sí"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Cargador GaN 140W USB-C",
+    "price": 48000,
+    "stock": 15,
+    "type": "accesorios",
+    "img": "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?q=80&w=800",
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?q=80&w=800",
+        "isMain": true
+      }
+    ],
+    "desc": "Cargador compacto GaN de 140W, 3 puertos. Carga rápida para todo.",
+    "specs": {
+      "Potencia": "140W",
+      "Puertos": "2x USB-C + 1x USB-A",
+      "Tecnología": "GaN III"
+    }
+  }
+]
