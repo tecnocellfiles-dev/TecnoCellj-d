@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TecnoCell · Admin Supabase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#06060a;--bg2:#0f0f15;--bg3:#18181f;--bg4:#1f1f28;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--cyan:#00e5ff;--cyan2:#80f4ff;--gold:#d4a843;--gold2:#f5cc6b;--rose:#c8956c;--text:#e8e8f0;--text2:rgba(232,232,240,0.5);--text3:rgba(232,232,240,0.22);--red:#ff4d6d;--green:#39d98a;--yellow:#ffd166;--r:8px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;}
+    ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;}
+    .login-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:52px 44px;width:100%;max-width:380px;text-align:center;}
+    .login-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;letter-spacing:4px;color:var(--gold);margin-bottom:4px;}
+    .login-logo em{color:var(--text2);font-style:normal;font-size:.9rem;letter-spacing:3px;display:block;margin-top:4px;font-family:'Space Mono',monospace;}
+    .login-sub{font-size:.72rem;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;}
+    .l-field{text-align:left;margin-bottom:16px;}
+    .l-label{display:block;font-size:.68rem;letter-spacing:2px;font-weight:600;color:var(--text2);margin-bottom:7px;text-transform:uppercase;}
+    .l-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+    .l-input:focus{border-color:var(--gold);}
+    .l-input::placeholder{color:var(--text3);}
+    .l-err{color:var(--red);font-size:.75rem;margin-top:10px;display:none;padding:8px 12px;background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.2);border-radius:6px;}
+    .l-btn{width:100%;margin-top:20px;padding:14px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:3px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .l-btn:hover{background:#e8ba55;box-shadow:0 0 30px rgba(212,168,67,.3);}
+    .l-hint{font-size:.68rem;color:var(--text3);margin-top:18px;letter-spacing:1px;}
+
+    .app{display:flex;min-height:100vh;}
+    .sidebar{width:240px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+    .s-logo{padding:28px 24px 20px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:3px;color:var(--gold);}
+    .s-logo span{color:var(--text3);font-size:.62rem;display:block;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+    .s-nav{padding:16px 12px;flex:1;}
+    .s-section{margin-bottom:24px;}
+    .s-sect-lbl{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--text3);padding:0 12px;margin-bottom:6px;}
+    .s-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);color:var(--text2);font-size:.85rem;cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left;text-decoration:none;font-family:'Space Grotesk',sans-serif;}
+    .s-item:hover{background:rgba(255,255,255,.04);color:var(--text);}
+    .s-item.active{background:rgba(212,168,67,.1);color:var(--gold);}
+    .s-item .si{font-size:1rem;width:20px;text-align:center;}
+    .s-foot{padding:16px 24px;border-top:1px solid var(--border);font-size:.7rem;color:var(--text3);}
+    .s-foot-name{color:var(--text2);margin-bottom:4px;}
+    .s-logout{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.68rem;font-family:'Space Mono',monospace;letter-spacing:1px;padding:0;transition:color .2s;}
+    .s-logout:hover{color:var(--red);}
+
+    .main-area{flex:1;overflow-x:hidden;display:flex;flex-direction:column;}
+    .topbar{padding:18px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg2);position:sticky;top:0;z-index:100;}
+    .topbar-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;}
+    .topbar-r{display:flex;align-items:center;gap:10px;}
+    .save-badge{font-size:.68rem;color:var(--green);letter-spacing:1px;opacity:0;transition:opacity .4s;font-family:'Space Mono',monospace;}
+    .sync-status{font-size:.68rem;color:var(--text3);letter-spacing:1px;font-family:'Space Mono',monospace;}
+    .sync-status.online{color:var(--green);}
+    .sync-status.offline{color:var(--red);}
+
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 17px;border-radius:var(--r);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s;border:none;font-family:'Space Grotesk',sans-serif;}
+    .btn-primary{background:var(--gold);color:#000;}
+    .btn-primary:hover{background:#e8ba55;box-shadow:0 0 20px rgba(212,168,67,.25);}
+    .btn-cyan{background:var(--cyan);color:#000;}
+    .btn-cyan:hover{background:var(--cyan2);}
+    .btn-ghost{background:none;border:1px solid var(--border2);color:var(--text2);}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+    .btn-danger{background:var(--red);color:#fff;}
+    .btn-danger:hover{opacity:.85;}
+    .btn-sm{padding:6px 12px;font-size:.73rem;}
+
+    .content{padding:26px 28px;flex:1;}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;}
+    .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;transition:border-color .2s;}
+    .stat-card:hover{border-color:var(--border2);}
+    .stat-label{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;font-family:'Space Mono',monospace;}
+    .stat-value{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--text);letter-spacing:-1px;}
+    .stat-sub{font-size:.68rem;color:var(--text3);margin-top:4px;}
+    .stat-card.gold .stat-value{color:var(--gold);}
+    .stat-card.red  .stat-value{color:var(--red);}
+    .stat-card.grn  .stat-value{color:var(--green);}
+    .stat-card.cyn  .stat-value{color:var(--cyan);}
+
+    .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+    .sec-ttl{font-size:.98rem;font-weight:600;}
+    .sec-ttl span{color:var(--text3);font-weight:400;font-size:.82rem;margin-left:8px;}
+    .filters-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .fchip{padding:7px 15px;border-radius:99px;border:1px solid var(--border);background:none;color:var(--text2);font-size:.76rem;cursor:pointer;transition:all .2s;font-family:'Space Grotesk',sans-serif;}
+    .fchip:hover{border-color:var(--border2);color:var(--text);}
+    .fchip.active{background:rgba(212,168,67,.1);border-color:var(--gold);color:var(--gold);}
+    .search-box{margin-left:auto;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 13px;color:var(--text);font-size:.83rem;font-family:'Space Grotesk',sans-serif;outline:none;width:200px;transition:border-color .2s;}
+    .search-box:focus{border-color:var(--border2);}
+    .search-box::placeholder{color:var(--text3);}
+    .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+    .prod-table{width:100%;border-collapse:collapse;}
+    .prod-table th{padding:11px 14px;text-align:left;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;}
+    .prod-table td{padding:13px 14px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:.84rem;}
+    .prod-table tr:last-child td{border-bottom:none;}
+    .prod-table tr:hover td{background:rgba(255,255,255,.015);}
+    .prod-img{width:46px;height:46px;object-fit:contain;border-radius:4px;background:var(--bg3);border:1px solid var(--border);flex-shrink:0;}
+    .prod-name-cell{display:flex;align-items:center;gap:12px;}
+    .prod-name{font-weight:500;color:var(--text);margin-bottom:2px;}
+    .prod-id{font-size:.68rem;color:var(--text3);font-family:'Space Mono',monospace;}
+    .badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:.64rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+    .badge-family{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.25);}
+    .price-cell{font-family:'Space Mono',monospace;font-size:.9rem;color:var(--gold);}
+    .stock-ok{color:var(--green);font-weight:600;}
+    .stock-low{color:var(--yellow);font-weight:600;}
+    .stock-out{color:var(--red);font-weight:600;}
+    .actions-cell{display:flex;align-items:center;gap:7px;}
+    .icon-btn{width:30px;height:30px;border-radius:6px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:.88rem;}
+    .icon-btn:hover{border-color:var(--border2);color:var(--text);}
+    .icon-btn.edit:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,.06);}
+    .icon-btn.del:hover{border-color:var(--red);color:var(--red);background:rgba(255,77,109,.06);}
+    .chk{width:15px;height:15px;cursor:pointer;accent-color:var(--gold);}
+    .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
+    .empty-icon{font-size:2.5rem;margin-bottom:14px;}
+    .empty-txt{font-size:.95rem;margin-bottom:6px;color:var(--text2);}
+    .empty-sub{font-size:.78rem;}
+    .pagination{display:flex;align-items:center;gap:7px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap;}
+    .pg-btn{width:30px;height:30px;border-radius:6px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s;font-size:.78rem;}
+    .pg-btn:hover{border-color:var(--border2);color:var(--text);}
+    .pg-btn.active{background:rgba(212,168,67,.1);border-color:var(--gold);color:var(--gold);}
+    .pg-info{font-size:.76rem;color:var(--text3);}
+
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:820px;max-height:92vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;animation:mIn .25s ease;}
+    @keyframes mIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-head{padding:22px 26px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:2;}
+    .modal-ttl{font-size:1.05rem;font-weight:600;}
+    .modal-x{background:none;border:none;color:var(--text3);font-size:1.1rem;cursor:pointer;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+    .modal-x:hover{background:rgba(255,255,255,.06);color:var(--text);}
+    .modal-body{padding:22px 26px 26px;}
+    .modal-foot{padding:18px 26px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:var(--bg2);position:sticky;bottom:0;z-index:2;}
+
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;}
+    .form-group.full{grid-column:1/-1;}
+    .f-label{font-size:.7rem;letter-spacing:1px;font-weight:600;color:var(--text2);text-transform:uppercase;}
+    .f-label span{color:var(--red);margin-left:2px;}
+    .f-input,.f-select,.f-textarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.87rem;outline:none;transition:border-color .2s;width:100%;}
+    .f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--gold);}
+    .f-input::placeholder,.f-textarea::placeholder{color:var(--text3);}
+    .f-textarea{resize:vertical;min-height:88px;}
+    .f-select option{background:var(--bg3);}
+    .form-sec{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin:18px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+    .form-sec:first-child{margin-top:0;}
+    .price-wrap{position:relative;}
+    .price-sym{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
+    .price-wrap input{padding-left:22px;}
+
+    .img-zone{border:2px dashed var(--border);border-radius:var(--r);padding:28px;text-align:center;transition:all .2s;background:var(--bg3);cursor:pointer;position:relative;overflow:hidden;}
+    .img-zone:hover,.img-zone.dragover{border-color:var(--gold);background:rgba(212,168,67,.03);}
+    .img-zone-icon{font-size:2rem;margin-bottom:10px;}
+    .img-zone-text{font-size:.8rem;color:var(--text2);margin-bottom:6px;}
+    .img-zone-sub{font-size:.68rem;color:var(--text3);}
+    .img-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .img-preview-wrap{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+    .img-preview-item{position:relative;width:80px;height:80px;border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--bg3);}
+    .img-preview-item img{width:100%;height:100%;object-fit:cover;}
+    .img-preview-item .img-del{position:absolute;top:2px;right:2px;background:rgba(255,77,109,.9);color:#fff;border:none;width:20px;height:20px;border-radius:4px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .img-preview-item .img-main{position:absolute;bottom:2px;left:2px;background:rgba(212,168,67,.9);color:#000;border:none;font-size:9px;padding:2px 6px;border-radius:4px;cursor:pointer;font-weight:700;}
+    .img-preview-item.main{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,168,67,.3);}
+    .camera-row{display:flex;gap:8px;margin-top:10px;}
+    .cam-btn{flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:.78rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .cam-btn:hover{border-color:var(--gold);color:var(--gold);}
+    #camera-stream{display:none;width:100%;max-height:200px;border-radius:var(--r);border:1px solid var(--border);margin-top:10px;background:#000;}
+    #camera-canvas{display:none;}
+    .cam-controls{display:none;gap:8px;margin-top:8px;}
+
+    .specs-list{display:flex;flex-direction:column;gap:7px;margin-top:7px;}
+    .spec-row-edit{display:flex;gap:7px;align-items:center;}
+    .spec-row-edit input{flex:1;}
+    .spec-del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.88rem;transition:color .2s;flex-shrink:0;}
+    .spec-del-btn:hover{color:var(--red);}
+
+    .confirm-wrap{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;}
+    .confirm-wrap.open{display:flex;}
+    .confirm-box{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:34px;max-width:340px;width:100%;text-align:center;animation:mIn .2s ease;}
+    .confirm-ttl{font-size:1.05rem;font-weight:600;margin-bottom:8px;}
+    .confirm-sub{color:var(--text2);font-size:.83rem;margin-bottom:22px;}
+    .confirm-actions{display:flex;gap:10px;justify-content:center;}
+
+    #toast-zone{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+    .toast-msg{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:11px 16px;font-size:.8rem;display:flex;align-items:center;gap:9px;opacity:0;transform:translateX(20px);transition:all .3s;pointer-events:all;}
+    .toast-msg.show{opacity:1;transform:translateX(0);}
+    .toast-msg.ok{border-color:rgba(57,217,138,.4);}
+    .toast-msg.err{border-color:rgba(255,77,109,.4);}
+    .toast-msg.info{border-color:rgba(0,229,255,.4);}
+
+    .loading-overlay{position:fixed;inset:0;background:rgba(6,6,10,.85);z-index:5000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+    .loading-overlay.open{display:flex;}
+    .spinner{width:36px;height:36px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .loading-text{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:2px;color:var(--text2);}
+
+    .api-config{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:20px;}
+    .api-config-label{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+
+    @media(max-width:900px){.sidebar{display:none;}.stats-grid{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.content{padding:18px;}.topbar{padding:14px 18px;}.modal-box{max-width:100%;}}
+    @media(max-width:600px){.stats-grid{grid-template-columns:1fr 1fr;}.search-box{width:100%;margin-left:0;margin-top:10px;}.filters-bar{flex-direction:column;align-items:stretch;}}
+  </style>
+</head>
+<body>
+
+<div class="login-wrap" id="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">TECNO<em>CELL ADMIN PRO</em></div>
+    <div class="login-sub">Panel de Control · Supabase</div>
+    <div class="l-field">
+      <label class="l-label">Usuario</label>
+      <input class="l-input" type="text" id="l-user" placeholder="admin" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="l-field">
+      <label class="l-label">Contraseña</label>
+      <input class="l-input" type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="l-err" id="l-err">Usuario o contraseña incorrectos.</div>
+    <button class="l-btn" onclick="doLogin()">INGRESAR</button>
+    <div class="l-hint">La contraseña se verifica de forma segura (SHA-256)</div>
+  </div>
+</div>
+
+<div class="app" id="app" style="display:none;">
+  <aside class="sidebar">
+    <div class="s-logo">TECNO<em>CELL</em><span>Admin Pro · Supabase</span></div>
+    <nav class="s-nav">
+      <div class="s-section">
+        <div class="s-sect-lbl">Gestión</div>
+        <button class="s-item active" id="nav-products" onclick="showSection('products')"><span class="si">📦</span>Productos</button>
+      </div>
+      <div class="s-section">
+        <div class="s-sect-lbl">Categorías</div>
+        <button class="s-item" onclick="quickFilter('celulares')"><span class="si">📱</span>Celulares</button>
+        <button class="s-item" onclick="quickFilter('tech')"><span class="si">💻</span>Tech</button>
+        <button class="s-item" onclick="quickFilter('accesorios')"><span class="si">🎧</span>Accesorios</button>
+      </div>
+      <div class="s-section">
+        <div class="s-sect-lbl">Tienda</div>
+        <a class="s-item" href="index.html" target="_blank"><span class="si">🏠</span>Ver tienda</a>
+      </div>
+    </nav>
+    <div class="s-foot">
+      <div class="s-foot-name" id="admin-name">Administrador</div>
+      <div class="sync-status" id="sync-status">● Conectando…</div>
+      <button class="s-logout" onclick="doLogout()">Cerrar sesión →</button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Gestión de Productos</div>
+      <div class="topbar-r">
+        <span class="save-badge" id="save-badge">Sincronizado</span>
+        <button class="btn btn-primary" onclick="openNewProduct()">+ Agregar Producto</button>
+      </div>
+    </div>
+
+    <div class="content" id="sec-products">
+      <div class="api-config">
+        <div class="api-config-label">🔗 Configuración de Supabase</div>
+        <div class="form-grid" style="margin-bottom:0;">
+          <div class="form-group">
+            <label class="f-label">URL del Proyecto</label>
+            <input class="f-input" type="url" id="sb-url" placeholder="https://abcdefgh12345678.supabase.co" onchange="saveSupabaseConfig()">
+          </div>
+          <div class="form-group">
+            <label class="f-label">Anon Key (pública)</label>
+            <input class="f-input" type="text" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs..." onchange="saveSupabaseConfig()">
+          </div>
+        </div>
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="sec-hdr">
+        <div class="sec-ttl">Inventario <span id="prod-count"></span></div>
+        <button class="btn btn-danger btn-sm" id="bulk-del-btn" style="display:none;" onclick="openBulkDelete()">🗑 Eliminar seleccionados</button>
+      </div>
+      <div class="filters-bar">
+        <button class="fchip active" data-type="all" onclick="setTypeFilter('all')">Todos</button>
+        <button class="fchip" data-type="celulares" onclick="setTypeFilter('celulares')">📱 Celulares</button>
+        <button class="fchip" data-type="tech" onclick="setTypeFilter('tech')">💻 Tech</button>
+        <button class="fchip" data-type="accesorios" onclick="setTypeFilter('accesorios')">🎧 Accesorios</button>
+        <input class="search-box" type="text" placeholder="🔍 Buscar..." oninput="setSearch(this.value)" id="search-box">
+      </div>
+      <div class="table-wrap">
+        <table class="prod-table">
+          <thead><tr>
+            <th style="width:36px;"><input type="checkbox" class="chk" id="chk-all" onchange="toggleAll(this)"></th>
+            <th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th style="width:96px;">Acciones</th>
+          </tr></thead>
+          <tbody id="prod-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="product-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-ttl" id="modal-ttl">Nuevo Producto</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-sec">Información básica</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="f-label">Nombre <span>*</span></label>
+          <input class="f-input" type="text" id="f-name" placeholder="Ej: Samsung Galaxy A55">
+        </div>
+        <div class="form-group">
+          <label class="f-label">Categoría <span>*</span></label>
+          <select class="f-select" id="f-type">
+            <option value="celulares">📱 Celulares</option>
+            <option value="tech">💻 Tech</option>
+            <option value="accesorios">🎧 Accesorios</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="f-label">Stock</label>
+          <input class="f-input" type="number" id="f-stock" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="f-label">Precio (₡) <span>*</span></label>
+          <div class="price-wrap">
+            <span class="price-sym">₡</span>
+            <input class="f-input" type="number" id="f-price" placeholder="0" min="0" step="100">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label class="f-label">Descripción</label>
+          <textarea class="f-textarea" id="f-desc" placeholder="Descripción del producto…"></textarea>
+        </div>
+      </div>
+
+      <div class="form-sec">📸 Imágenes del producto</div>
+      <div class="form-group full">
+        <div class="img-zone" id="img-zone">
+          <div class="img-zone-icon">📤</div>
+          <div class="img-zone-text">Arrastra imágenes aquí o haz clic para seleccionar</div>
+          <div class="img-zone-sub">También puedes pegar una URL de imagen abajo</div>
+          <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+        </div>
+        <div class="camera-row">
+          <button class="cam-btn" onclick="openCamera()">📷 Abrir cámara</button>
+          <button class="cam-btn" onclick="document.getElementById('file-input').click()">🖼 Galería</button>
+        </div>
+        <video id="camera-stream" autoplay playsinline></video>
+        <canvas id="camera-canvas"></canvas>
+        <div class="cam-controls" id="cam-controls">
+          <button class="btn btn-primary btn-sm" onclick="capturePhoto()">📸 Capturar</button>
+          <button class="btn btn-ghost btn-sm" onclick="stopCamera()">✕ Cancelar</button>
+        </div>
+        <div class="img-preview-wrap" id="img-preview-wrap"></div>
+        <input class="f-input" type="url" id="f-img-url" placeholder="O pega una URL de imagen externa (Unsplash, etc.)" style="margin-top:10px;" onchange="addUrlImage(this.value)">
+      </div>
+
+      <div class="form-sec">Especificaciones técnicas</div>
+      <div class="specs-list" id="specs-list"></div>
+      <div style="display:flex;gap:7px;margin-top:7px;">
+        <input class="f-input" type="text" id="new-spec-k" placeholder="Ej: RAM">
+        <input class="f-input" type="text" id="new-spec-v" placeholder="Ej: 8 GB" onkeydown="if(event.key==='Enter')addSpec()">
+        <button class="btn btn-ghost btn-sm" onclick="addSpec()">+ Añadir</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProduct()">💾 Guardar en Supabase</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-wrap" id="confirm-wrap">
+  <div class="confirm-box">
+    <div class="confirm-ttl" id="confirm-ttl">¿Eliminar producto?</div>
+    <div class="confirm-sub" id="confirm-sub">Esta acción no se puede deshacer.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn btn-danger" id="confirm-ok">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loading-text">Sincronizando…</div>
+</div>
+
+<div id="toast-zone"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════
+const ADMIN_USER = 'admin';
+const ADMIN_HASH = '7e63b7dc634cbd7e53bda83b4f402b886b1ba64968d4d68d508985791c4b5f77';
+const SESSION_KEY = 'tc-admin-session-v3';
+const SB_URL_KEY = 'tc-sb-url';
+const SB_KEY_KEY = 'tc-sb-key';
+
+let SB_URL = localStorage.getItem(SB_URL_KEY) || '';
+let SB_KEY = localStorage.getItem(SB_KEY_KEY) || '';
+let adminInventory = [];
+let filter = { type: 'all', search: '' };
+let selectedIds = new Set();
+let editingId = null;
+let galleryItems = [];
+let specItems = [];
+let currentPage = 1;
+const PAGE_SIZE = 20;
+let stream = null;
+
+// ═══════════════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════════════
+async function sha256(text) {
+  const buf = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+async function doLogin() {
+  const u = (document.getElementById('l-user').value || '').trim();
+  const p = document.getElementById('l-pass').value || '';
+  const hash = await sha256(p);
+  if (u === ADMIN_USER && hash === ADMIN_HASH) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }));
+    showApp();
+  } else {
+    const e = document.getElementById('l-err'); e.style.display = 'block';
+    setTimeout(() => e.style.display = 'none', 3500);
+    document.getElementById('l-pass').value = '';
+    document.getElementById('l-pass').focus();
+  }
+}
+function doLogout() { localStorage.removeItem(SESSION_KEY); location.reload(); }
+function checkSession() {
+  try { const s = JSON.parse(localStorage.getItem(SESSION_KEY)); if (s && Date.now() - s.ts < 8*60*60*1000) return true; } catch(e){}
+  return false;
+}
+function showApp() {
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('sb-url').value = SB_URL;
+  document.getElementById('sb-key').value = SB_KEY;
+  initAdmin();
+}
+function saveSupabaseConfig() {
+  SB_URL = document.getElementById('sb-url').value.trim().replace(/\/$/,'');
+  SB_KEY = document.getElementById('sb-key').value.trim();
+  localStorage.setItem(SB_URL_KEY, SB_URL);
+  localStorage.setItem(SB_KEY_KEY, SB_KEY);
+  toast('Configuración guardada ✓','ok');
+  if (SB_URL && SB_KEY) loadFromSupabase();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SUPABASE API
+// ═══════════════════════════════════════════════════════════
+function sbHeaders() {
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
+}
+async function sbGet(path) {
+  const res = await fetch(SB_URL + '/rest/v1' + path, { headers: sbHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbPost(path, body) {
+  const res = await fetch(SB_URL + '/rest/v1' + path, { method: 'POST', headers: sbHeaders(), body: JSON.stringify(body) });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbPatch(path, body) {
+  const res = await fetch(SB_URL + '/rest/v1' + path, { method: 'PATCH', headers: sbHeaders(), body: JSON.stringify(body) });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+async function sbDelete(path) {
+  const res = await fetch(SB_URL + '/rest/v1' + path, { method: 'DELETE', headers: sbHeaders() });
+  if (!res.ok) throw new Error(await res.text());
+  return true;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+async function initAdmin() {
+  if (!SB_URL || !SB_KEY) { toast('Configura Supabase arriba ↑','err'); setSyncStatus(false); return; }
+  await loadFromSupabase();
+}
+async function loadFromSupabase() {
+  showLoading('Cargando inventario…');
+  try {
+    const data = await sbGet('/products?select=*&order=id.asc');
+    adminInventory = data.map(row => ({
+      id: row.id,
+      name: row.name,
+      price: row.price,
+      stock: row.stock,
+      type: row.type,
+      img: row.img,
+      gallery: typeof row.gallery === 'string' ? JSON.parse(row.gallery) : (row.gallery || []),
+      desc: row.description,
+      specs: typeof row.specs === 'string' ? JSON.parse(row.specs) : (row.specs || {})
+    }));
+    setSyncStatus(true);
+    renderAll();
+    toast(`${adminInventory.length} productos cargados ✓`,'ok');
+  } catch(e) {
+    setSyncStatus(false);
+    toast('Error: ' + e.message,'err');
+    console.error(e);
+  } finally {
+    hideLoading();
+  }
+}
+function setSyncStatus(ok) {
+  const el = document.getElementById('sync-status');
+  el.textContent = ok ? '● Conectado a Supabase' : '● Sin conexión';
+  el.className = 'sync-status ' + (ok ? 'online' : 'offline');
+}
+function showLoading(txt) { document.getElementById('loading-text').textContent = txt; document.getElementById('loading-overlay').classList.add('open'); }
+function hideLoading() { document.getElementById('loading-overlay').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+function renderAll() { renderStats(); renderTable(); }
+function renderStats() {
+  const total = adminInventory.length;
+  const out   = adminInventory.filter(i => (i.stock||0) <= 0).length;
+  const low   = adminInventory.filter(i => (i.stock||0) > 0 && (i.stock||0) <= 5).length;
+  const phones = adminInventory.filter(i => i.type === 'celulares').length;
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total productos</div><div class="stat-value">${total}</div><div class="stat-sub">En el inventario</div></div>
+    <div class="stat-card cyn"><div class="stat-label">Celulares</div><div class="stat-value">${phones}</div><div class="stat-sub">Activos</div></div>
+    <div class="stat-card red"><div class="stat-label">Sin stock</div><div class="stat-value">${out}</div><div class="stat-sub">Agotados</div></div>
+    <div class="stat-card gold"><div class="stat-label">Stock bajo</div><div class="stat-value">${low}</div><div class="stat-sub">≤ 5 unidades</div></div>`;
+}
+function getFiltered() {
+  let items = [...adminInventory];
+  if (filter.type !== 'all') items = items.filter(i => i.type === filter.type);
+  if (filter.search) { const q = filter.search.toLowerCase(); items = items.filter(i => i.name.toLowerCase().includes(q) || (i.desc||'').toLowerCase().includes(q) || String(i.id).includes(q)); }
+  return items;
+}
+function renderTable() {
+  const all = getFiltered();
+  const start = (currentPage-1)*PAGE_SIZE;
+  const items = all.slice(start, start+PAGE_SIZE);
+  document.getElementById('prod-count').textContent = `(${all.length} productos)`;
+  const tbody = document.getElementById('prod-tbody');
+  if (!all.length) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-txt">Sin productos</div><div class="empty-sub">Agrega tu primer producto con el botón de arriba</div></div></td></tr>`;
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+  tbody.innerHTML = items.map(item => {
+    const img = item.gallery?.[0]?.url || item.img || '';
+    const stockCls = (item.stock||0) <= 0 ? 'stock-out' : (item.stock||0) <= 5 ? 'stock-low' : 'stock-ok';
+    const stockTxt = (item.stock||0) <= 0 ? 'Agotado' : item.stock;
+    const checked = selectedIds.has(item.id) ? 'checked' : '';
+    return `<tr>
+      <td><input type="checkbox" class="chk" ${checked} onchange="toggleSelect(${item.id},this)"></td>
+      <td><div class="prod-name-cell"><img class="prod-img" src="${img}" alt="${item.name}" onerror="this.style.display='none'"><div><div class="prod-name">${item.name}</div><div class="prod-id">#${item.id}</div></div></div></td>
+      <td><span class="badge badge-family">${item.type}</span></td>
+      <td><span class="price-cell">₡${item.price.toLocaleString()}</span></td>
+      <td><span class="${stockCls}">${stockTxt}</span></td>
+      <td><div class="actions-cell">
+        <button class="icon-btn edit" onclick="openEdit(${item.id})" title="Editar">✏</button>
+        <button class="icon-btn del" onclick="confirmDelete(${item.id},'${item.name.replace(/'/g,"\'")}')" title="Eliminar">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+  const totalPages = Math.ceil(all.length/PAGE_SIZE);
+  let pgHtml = '';
+  if (totalPages > 1) {
+    pgHtml += `<span class="pg-info">Página ${currentPage} / ${totalPages}</span>`;
+    for (let p=1; p<=totalPages; p++) pgHtml += `<button class="pg-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  }
+  document.getElementById('pagination').innerHTML = pgHtml;
+  document.getElementById('bulk-del-btn').style.display = selectedIds.size > 0 ? '' : 'none';
+  const chkAll = document.getElementById('chk-all');
+  if (chkAll) chkAll.checked = items.length > 0 && items.every(i => selectedIds.has(i.id));
+}
+function goPage(p) { currentPage = p; renderTable(); }
+function setTypeFilter(t) { filter.type = t; currentPage = 1; document.querySelectorAll('.fchip').forEach(b => b.classList.toggle('active', b.dataset.type === t || (t==='all' && b.textContent.trim()==='Todos'))); renderTable(); }
+function setSearch(v) { filter.search = v; currentPage = 1; renderTable(); }
+function quickFilter(t) { filter.type = t; setTypeFilter(t); }
+function toggleSelect(id, cb) { if (cb.checked) selectedIds.add(id); else selectedIds.delete(id); renderTable(); }
+function toggleAll(cb) { const all = getFiltered().slice((currentPage-1)*PAGE_SIZE,(currentPage)*PAGE_SIZE); all.forEach(i => { if(cb.checked) selectedIds.add(i.id); else selectedIds.delete(i.id); }); renderTable(); }
+
+// ═══════════════════════════════════════════════════════════
+//  PRODUCT MODAL
+// ═══════════════════════════════════════════════════════════
+function openNewProduct() {
+  editingId = null; galleryItems = []; specItems = [];
+  document.getElementById('modal-ttl').textContent = 'Nuevo Producto';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-type').value = 'celulares';
+  document.getElementById('f-price').value = '';
+  document.getElementById('f-stock').value = '';
+  document.getElementById('f-desc').value = '';
+  document.getElementById('f-img-url').value = '';
+  renderGallery(); renderSpecs();
+  document.getElementById('product-modal').classList.add('open');
+}
+function openEdit(id) {
+  const item = adminInventory.find(i => i.id === id); if (!item) return;
+  editingId = id;
+  galleryItems = item.gallery ? JSON.parse(JSON.stringify(item.gallery)) : (item.img ? [{url:item.img,isMain:true}] : []);
+  specItems = item.specs ? Object.entries(item.specs).map(([k,v]) => ({key:k,val:v})) : [];
+  document.getElementById('modal-ttl').textContent = 'Editar Producto';
+  document.getElementById('f-name').value = item.name || '';
+  document.getElementById('f-type').value = item.type || 'celulares';
+  document.getElementById('f-price').value = item.price || '';
+  document.getElementById('f-stock').value = item.stock ?? '';
+  document.getElementById('f-desc').value = item.desc || '';
+  renderGallery(); renderSpecs();
+  document.getElementById('product-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('product-modal').classList.remove('open'); stopCamera(); }
+
+// ═══════════════════════════════════════════════════════════
+//  IMAGES
+// ═══════════════════════════════════════════════════════════
+const imgZone = document.getElementById('img-zone');
+imgZone.addEventListener('dragover', e => { e.preventDefault(); imgZone.classList.add('dragover'); });
+imgZone.addEventListener('dragleave', () => imgZone.classList.remove('dragover'));
+imgZone.addEventListener('drop', e => { e.preventDefault(); imgZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
+async function handleFiles(files) {
+  for (const file of files) {
+    if (!file.type.startsWith('image/')) continue;
+    const base64 = await resizeImage(file, 1200);
+    galleryItems.push({ url: base64, isMain: galleryItems.length === 0 });
+  }
+  renderGallery();
+}
+function addUrlImage(url) {
+  if (!url.trim()) return;
+  galleryItems.push({ url: url.trim(), isMain: galleryItems.length === 0 });
+  document.getElementById('f-img-url').value = '';
+  renderGallery();
+}
+function resizeImage(file, maxWidth) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function openCamera() {
+  const video = document.getElementById('camera-stream');
+  const controls = document.getElementById('cam-controls');
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    video.srcObject = stream;
+    video.style.display = 'block';
+    controls.style.display = 'flex';
+  } catch(e) {
+    toast('No se pudo acceder a la cámara: ' + e.message, 'err');
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*'; input.capture = 'environment';
+    input.onchange = (e) => handleFiles(e.target.files);
+    input.click();
+  }
+}
+function stopCamera() {
+  const video = document.getElementById('camera-stream');
+  const controls = document.getElementById('cam-controls');
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  video.style.display = 'none'; controls.style.display = 'none';
+}
+function capturePhoto() {
+  const video = document.getElementById('camera-stream');
+  const canvas = document.getElementById('camera-canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  const base64 = canvas.toDataURL('image/jpeg', 0.9);
+  galleryItems.push({ url: base64, isMain: galleryItems.length === 0 });
+  renderGallery();
+  stopCamera();
+  toast('Foto capturada ✓','ok');
+}
+
+function renderGallery() {
+  const wrap = document.getElementById('img-preview-wrap');
+  wrap.innerHTML = galleryItems.map((g,i) => `
+    <div class="img-preview-item ${g.isMain?'main':''}">
+      <img src="${g.url}" alt="img" loading="lazy">
+      <button class="img-del" onclick="removeGallery(${i})">✕</button>
+      ${!g.isMain?`<button class="img-main" onclick="setMainGallery(${i})">★</button>`:''}
+    </div>`).join('');
+}
+function removeGallery(i) {
+  const wasMain = galleryItems[i].isMain; galleryItems.splice(i,1);
+  if (wasMain && galleryItems.length) galleryItems[0].isMain = true;
+  renderGallery();
+}
+function setMainGallery(i) { galleryItems.forEach((g,j) => g.isMain = j===i); renderGallery(); }
+
+function renderSpecs() {
+  document.getElementById('specs-list').innerHTML = specItems.map((s,i) => `
+    <div class="spec-row-edit">
+      <input class="f-input" type="text" value="${s.key}" placeholder="Nombre" oninput="specItems[${i}].key=this.value">
+      <input class="f-input" type="text" value="${s.val}" placeholder="Valor" oninput="specItems[${i}].val=this.value">
+      <button class="spec-del-btn" onclick="removeSpec(${i})">✕</button>
+    </div>`).join('');
+}
+function addSpec() {
+  const k = document.getElementById('new-spec-k').value.trim();
+  const v = document.getElementById('new-spec-v').value.trim();
+  if (!k) return;
+  specItems.push({key:k,val:v});
+  document.getElementById('new-spec-k').value = '';
+  document.getElementById('new-spec-v').value = '';
+  renderSpecs();
+}
+function removeSpec(i) { specItems.splice(i,1); renderSpecs(); }
+
+// ═══════════════════════════════════════════════════════════
+//  SAVE PRODUCT (SUPABASE)
+// ═══════════════════════════════════════════════════════════
+async function saveProduct() {
+  const name  = document.getElementById('f-name').value.trim();
+  const type  = document.getElementById('f-type').value;
+  const price = Number(document.getElementById('f-price').value) || 0;
+  const stock = document.getElementById('f-stock').value !== '' ? Number(document.getElementById('f-stock').value) : 0;
+  const desc  = document.getElementById('f-desc').value.trim();
+  if (!name) { toast('El nombre es obligatorio','err'); return; }
+  if (!price) { toast('El precio es obligatorio','err'); return; }
+  if (!galleryItems.length) { toast('Agrega al menos una imagen','err'); return; }
+
+  if (!galleryItems.find(g => g.isMain)) galleryItems[0].isMain = true;
+  const specs = {}; specItems.forEach(s => { if(s.key) specs[s.key] = s.val; });
+  const mainImg = galleryItems.find(g => g.isMain)?.url || galleryItems[0].url;
+
+  const payload = {
+    name, type, price, stock,
+    description: desc,
+    img: mainImg,
+    gallery: galleryItems,
+    specs: specs
+  };
+
+  showLoading(editingId ? 'Actualizando en Supabase…' : 'Creando en Supabase…');
+  try {
+    if (editingId !== null) {
+      await sbPatch('/products?id=eq.' + editingId, payload);
+      toast('Producto actualizado ✓','ok');
+    } else {
+      const nextId = adminInventory.length > 0 ? Math.max(...adminInventory.map(i => i.id)) + 1 : 1;
+      payload.id = nextId;
+      await sbPost('/products', payload);
+      toast('Producto creado ✓','ok');
+    }
+    await loadFromSupabase();
+    closeModal();
+  } catch(e) {
+    toast('Error: ' + e.message,'err');
+    console.error(e);
+  } finally {
+    hideLoading();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DELETE
+// ═══════════════════════════════════════════════════════════
+function confirmDelete(id, name) {
+  showConfirm(`¿Eliminar "${name}"?`, 'Esta acción no se puede deshacer.', async () => {
+    showLoading('Eliminando…');
+    try {
+      await sbDelete('/products?id=eq.' + id);
+      await loadFromSupabase();
+      toast('Producto eliminado','ok');
+    } catch(e) { toast('Error: ' + e.message,'err'); }
+    finally { hideLoading(); closeConfirm(); }
+  });
+}
+function openBulkDelete() {
+  if (!selectedIds.size) return;
+  showConfirm(`¿Eliminar ${selectedIds.size} producto(s)?`, 'Esta acción no se puede deshacer.', async () => {
+    showLoading('Eliminando…');
+    try {
+      for (const id of selectedIds) await sbDelete('/products?id=eq.' + id);
+      selectedIds.clear();
+      await loadFromSupabase();
+      toast('Productos eliminados','ok');
+    } catch(e) { toast('Error: ' + e.message,'err'); }
+    finally { hideLoading(); closeConfirm(); }
+  });
+}
+
+function showConfirm(title, sub, onOk) {
+  document.getElementById('confirm-ttl').textContent = title;
+  document.getElementById('confirm-sub').textContent = sub;
+  document.getElementById('confirm-ok').onclick = onOk;
+  document.getElementById('confirm-wrap').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirm-wrap').classList.remove('open'); }
+
+function toast(msg, type='ok') {
+  const zone = document.getElementById('toast-zone');
+  const t = document.createElement('div');
+  t.className = `toast-msg ${type}`;
+  const icons = {ok:'✓', err:'✕', info:'◆'};
+  t.innerHTML = `<span style="font-size:.9rem">${icons[type]||'◆'}</span>${msg}`;
+  zone.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(),350); }, 2800);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (checkSession()) { showApp(); }
+  else { document.getElementById('login-wrap').style.display='flex'; setTimeout(()=>document.getElementById('l-user').focus(),100); }
+});
+</script>
+</body>
+</html>
